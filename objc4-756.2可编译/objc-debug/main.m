@@ -6,21 +6,19 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "LGPerson.h"
+#import "XZPerson.h"
+#import "XZTearcher.h"
+#import <objc/runtime.h>
+#import <malloc/malloc.h>
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
         // insert code here...
-        LGPerson *object = [LGPerson alloc];
+        XZPerson *object = [[XZPerson alloc] init];
         NSLog(@"Hello, World! %@",object);
-        NSString *str = [NSString stringWithFormat:@"123"];
-        
-        NSLog(@"%@ - %lu",str,[str retainCount]);
-        NSNumber *num = @100;
-        NSNumber *num2 = @(3.14);
-        NSLog(@"%@ - %lu",num,[num retainCount]);
-        NSLog(@"%@ - %lu",num2,[num2 retainCount]);
-
     }
     return 0;
 }
+
+
+

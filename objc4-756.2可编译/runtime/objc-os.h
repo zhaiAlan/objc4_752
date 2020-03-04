@@ -43,6 +43,17 @@
 #endif
 
 static inline uint32_t word_align(uint32_t x) {
+    //WORD_MASK  7
+    //7+8 = 15
+    //0000 0111 2进制表示7
+    //0000 1111 2进制表示15
+    //1111 1000 2进制表示~7
+    //0000 1000 15 & ~7 值 16
+    //这里主要就是做8进制对齐,这里相当于8倍数
+    //x + 7
+    //x=1  8
+    //x=2  16
+    //(x + 7) >> 3  << 3 这个也相当于8字节对齐
     return (x + WORD_MASK) & ~WORD_MASK;
 }
 static inline size_t word_align(size_t x) {

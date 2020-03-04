@@ -6992,14 +6992,16 @@ _class_createInstanceFromZone(Class cls, size_t extraBytes, void *zone,
     bool hasCxxCtor = cls->hasCxxCtor();
     bool hasCxxDtor = cls->hasCxxDtor();
     bool fast = cls->canAllocNonpointer();
-
+   // 获取需要开辟的内存大小
     size_t size = cls->instanceSize(extraBytes);
     if (outAllocatedSize) *outAllocatedSize = size;
 
     id obj;
     if (!zone  &&  fast) {
+        //这里是真正的创建类的方法但是这个calloc源码是在malloc中
         obj = (id)calloc(1, size);
         if (!obj) return nil;
+        //将内存指向给objc进行关联
         obj->initInstanceIsa(cls, hasCxxDtor);
     } 
     else {

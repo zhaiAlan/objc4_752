@@ -1188,8 +1188,8 @@ public:
 
 
 struct objc_class : objc_object {
-    // Class ISA;
-    Class superclass;
+//    Class ISA;
+    Class superclass;  //父类
     cache_t cache;             // formerly cache pointer and vtable
     class_data_bits_t bits;    // class_rw_t * plus custom rr/alloc flags
 
@@ -1450,13 +1450,14 @@ struct objc_class : objc_object {
 
     // Class's ivar size rounded up to a pointer-size boundary.
     uint32_t alignedInstanceSize() {
+        //字节对齐
         return word_align(unalignedInstanceSize());
     }
 
     size_t instanceSize(size_t extraBytes) {
         size_t size = alignedInstanceSize() + extraBytes;
         // CF requires all objects be at least 16 bytes.
-        if (size < 16) size = 16;
+        if (size < 16) size = 16; //最小返回16字节
         return size;
     }
 

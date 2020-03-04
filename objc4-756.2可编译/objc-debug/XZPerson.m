@@ -1,16 +1,16 @@
 //
-//  LGPerson.m
+//  XZPerson.m
 //  objc-debug
 //
-//  Created by Cooci on 2019/10/28.
+//  Created by Alan on 3/2/20.
 //
 
-#import "LGPerson.h"
+#import "XZPerson.h"
 
-@implementation LGPerson
+@implementation XZPerson
 //+ (instancetype)allocWithZone:(struct _NSZone *)zone{
 //    if (self == [super allocWithZone:zone]) {
-//        
+//
 //    }
 //    return self;
 //}
