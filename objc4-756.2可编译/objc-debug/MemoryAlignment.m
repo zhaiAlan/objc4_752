@@ -12,24 +12,32 @@
 #import <malloc/malloc.h>
 //24字节
 struct XZStruct1 {
-    char a;     // 1 + 7
-    double b;   // 8
-    int c;      // 4
-    short d;    // 2 + 2
+    char a;     // 1 + 7  1-7位
+    double b;   // 8      8-15位
+    int c;      // 4      16-19位
+    short d;    // 2 + 2  20-21位 字节对齐24位
 } MyStruct1;
 //16字节
 struct XZStruct2 {
-    double b;   // 8
-    char a;     // 1
-    short d;    // 2
-    int c;      // 4
+    double b;   // 8  这个占用内存的1-8位
+    char a;     // 1  min(9,1)是整数呗，9位
+    short d;    // 2  min(10,2)是整数呗 10-11位
+    int c;      // 4  min(12, 4)是整数倍 12- 16为
 
 } MyStruct2;
 
+//16字节
+struct XZStruct3 {
+    double b;   // 8  这个占用内存的1-8位
+    int c;      // 4  min(8, 4)是整数倍 8- 11为
+    char a;     // 1  min(12,1)是整数呗，12位
+    short d;    // 2  min(13,2)不是整数呗 14-15位
+
+} MyStruct3;
 
 @implementation MemoryAlignment
--(void)demo{
-       NSLog(@"\nMyStruct1 ==%lu\nMyStruct2==%lu",sizeof(MyStruct1),sizeof(MyStruct2));
++(void)demo{
+       NSLog(@"\nMyStruct1 ==%lu\nMyStruct2==%lu  \nMyStruct23==%lu",sizeof(MyStruct1),sizeof(MyStruct2),sizeof(MyStruct3));
 
                     /**
             １:数据成员对⻬规则：结构(struct)(或联合(union))的数据成员，第

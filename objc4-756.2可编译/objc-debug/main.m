@@ -10,8 +10,11 @@
 #import "XZTearcher.h"
 #import <objc/runtime.h>
 #import <malloc/malloc.h>
+#import "MemoryAlignment.h"
+
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
+        [MemoryAlignment demo];
         XZPerson *p = [XZPerson alloc];
      
         NSLog(@"%@",p);

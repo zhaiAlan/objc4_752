@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface MemoryAlignment : NSObject
 
 /// 内存对齐demo
--(void)demo;
++(void)demo;
 
 @end
 
