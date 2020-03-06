@@ -120,6 +120,7 @@
 		83F550E0155E030800E95D3B /* objc-cache-old.mm in Sources */ = {isa = PBXBuildFile; fileRef = 83F550DF155E030800E95D3B /* objc-cache-old.mm */; };
 		87BB4EA70EC39854005D08E1 /* objc-probes.d in Sources */ = {isa = PBXBuildFile; fileRef = 87BB4E900EC39633005D08E1 /* objc-probes.d */; };
 		9672F7EE14D5F488007CEC96 /* NSObject.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9672F7ED14D5F488007CEC96 /* NSObject.mm */; };
+		E71073542412485600316416 /* initInstanceIsa.m in Sources */ = {isa = PBXBuildFile; fileRef = E71073532412485600316416 /* initInstanceIsa.m */; };
 		E7E70AAF240CEEFF00BA3D34 /* XZPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = E7E70AAE240CEEFF00BA3D34 /* XZPerson.m */; };
 		E7E70AB2240E01C900BA3D34 /* XZTearcher.m in Sources */ = {isa = PBXBuildFile; fileRef = E7E70AB1240E01C900BA3D34 /* XZTearcher.m */; };
 		E7E70B172411E07700BA3D34 /* MemoryAlignment.m in Sources */ = {isa = PBXBuildFile; fileRef = E7E70B162411E07700BA3D34 /* MemoryAlignment.m */; };
@@ -251,6 +252,8 @@
 		9672F7ED14D5F488007CEC96 /* NSObject.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = NSObject.mm; path = runtime/NSObject.mm; sourceTree = "<group>"; };
 		BC8B5D1212D3D48100C78A5B /* libauto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libauto.dylib; path = /usr/lib/libauto.dylib; sourceTree = "<absolute>"; };
 		D2AAC0630554660B00DB518D /* libobjc.A.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libobjc.A.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		E71073522412485600316416 /* initInstanceIsa.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = initInstanceIsa.h; sourceTree = "<group>"; };
+		E71073532412485600316416 /* initInstanceIsa.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = initInstanceIsa.m; sourceTree = "<group>"; };
 		E7E70AAD240CEEFF00BA3D34 /* XZPerson.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XZPerson.h; sourceTree = "<group>"; };
 		E7E70AAE240CEEFF00BA3D34 /* XZPerson.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XZPerson.m; sourceTree = "<group>"; };
 		E7E70AB0240E01C900BA3D34 /* XZTearcher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XZTearcher.h; sourceTree = "<group>"; };
@@ -371,6 +374,7 @@
 		6F8ADBF32314D1F300E235A9 /* objc-debug */ = {
 			isa = PBXGroup;
 			children = (
+				E71073512412482400316416 /* isa */,
 				6F8ADBF42314D1F300E235A9 /* main.m */,
 				E7E70B152411E07700BA3D34 /* MemoryAlignment.h */,
 				E7E70B162411E07700BA3D34 /* MemoryAlignment.m */,
@@ -471,6 +475,15 @@
 				39ABD71F12F0B61800D1054C /* objc-weak.h */,
 			);
 			name = "Project Headers";
+			sourceTree = "<group>";
+		};
+		E71073512412482400316416 /* isa */ = {
+			isa = PBXGroup;
+			children = (
+				E71073522412485600316416 /* initInstanceIsa.h */,
+				E71073532412485600316416 /* initInstanceIsa.m */,
+			);
+			path = isa;
 			sourceTree = "<group>";
 		};
 		F9BCC72A205C6A1600DD9AFC /* Frameworks */ = {
@@ -702,6 +715,7 @@
 				E7E70B172411E07700BA3D34 /* MemoryAlignment.m in Sources */,
 				E7E70AB2240E01C900BA3D34 /* XZTearcher.m in Sources */,
 				E7E70AAF240CEEFF00BA3D34 /* XZPerson.m in Sources */,
+				E71073542412485600316416 /* initInstanceIsa.m in Sources */,
 				6F8ADBF52314D1F300E235A9 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

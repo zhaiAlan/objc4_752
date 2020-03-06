@@ -204,10 +204,12 @@ objc_object::initInstanceIsa(Class cls, bool hasCxxDtor)
 
 inline void 
 objc_object::initIsa(Class cls, bool nonpointer, bool hasCxxDtor) 
-{ 
-    assert(!isTaggedPointer()); 
-    
+{
+    //isTaggedPointer这个涉及内存管理，后续在进行详细解释
+    assert(!isTaggedPointer());
     if (!nonpointer) {
+//        isa对类的绑定
+//       使用位域属性进行赋值
         isa.cls = cls;
     } else {
         assert(!DisableNonpointerIsa);
@@ -217,17 +219,20 @@ objc_object::initIsa(Class cls, bool nonpointer, bool hasCxxDtor)
 
 #if SUPPORT_INDEXED_ISA
         assert(cls->classArrayIndex() > 0);
+//        #   define ISA_INDEX_MAGIC_VALUE 0x001C0001 直接使用bit进行赋值
         newisa.bits = ISA_INDEX_MAGIC_VALUE;
         // isa.magic is part of ISA_MAGIC_VALUE
         // isa.nonpointer is part of ISA_MAGIC_VALUE
         newisa.has_cxx_dtor = hasCxxDtor;
         newisa.indexcls = (uintptr_t)cls->classArrayIndex();
 #else
+//        #   define ISA_MAGIC_VALUE 0x000001a000000001ULL  直接使用bit进行赋值
         newisa.bits = ISA_MAGIC_VALUE;
         // isa.magic is part of ISA_MAGIC_VALUE
         // isa.nonpointer is part of ISA_MAGIC_VALUE
+//       使用位域进行赋值
         newisa.has_cxx_dtor = hasCxxDtor;
-        newisa.shiftcls = (uintptr_t)cls >> 3;
+        newisa.shiftcls = (uintptr_t)cls >> 3; //这个就是对类的绑定
 #endif
 
         // This write must be performed in a single store in some cases

@@ -57,16 +57,17 @@ namespace {
 };
 
 #include "isa.h"
-
+//联合体
 union isa_t {
-    isa_t() { }
+    isa_t() { } //初始化方法
     isa_t(uintptr_t value) : bits(value) { }
 
-    Class cls;
-    uintptr_t bits;
+    Class cls; //绑定类
+    uintptr_t bits;  //typedef unsigned long长整形8字节
 #if defined(ISA_BITFIELD)
     struct {
-        ISA_BITFIELD;  // defined in isa.h
+//        这里使用宏定义的原因是因为要根据系统架构进行区分的
+        ISA_BITFIELD;  // defined in isa.h 位域
     };
 #endif
 };

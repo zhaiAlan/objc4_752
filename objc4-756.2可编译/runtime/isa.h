@@ -54,10 +54,31 @@
     // uintptr_t lock : 2;        // lock for atomic property, @synch
     // uintptr_t extraBytes : 1;  // allocated with extra bytes
 
-# if __arm64__
+# if __arm64__       //真机
 #   define ISA_MASK        0x0000000ffffffff8ULL
 #   define ISA_MAGIC_MASK  0x000003f000000001ULL
 #   define ISA_MAGIC_VALUE 0x000001a000000001ULL
+/**
+nonpointer :1
+ 表示是否对isa指针开启指针优化；0代表纯isa指针，1代表不止是类对象指针，还包含了类信息、对象的引用计数等；
+has_cxx_dtor:1
+ 该对象是否有C++或者Objc的析构器，如果有析构函数，则需要做析构逻辑，如果没有，则可以更快的释放对象；
+hasCxxDtor:1
+ 该对象是否有C++或者Objc的析构器，如果有析构函数，则需要做析构逻辑，如果没有，则可以更快的释放对象；
+shiftcls:33
+存储类指针的值。开启指针优化的情况下，在arm64架构中有33位用来存储类指针；
+magic:6
+ 用于调试器判断当前对象是真的对象还是没有初始化的空间；
+ weakly_referenced :1
+标志对象是否被指向或者曾经指向一个ARC的弱变量，没有弱引用的对象可以更快释放；
+ deallocating :1
+标志对象是否正在释放内存；
+ has_sidetable_rc :1
+当对象引用计数大于10时，则需要借用该变量存储进位
+ extra_rc :19
+当表示该对象的引用计数值，实际上是引用计数值减1，例如，如果对象的引用计数为10，那么extra_rc为9.如果引用计数大于10，则需要使用上面提到的has_sidetable_rc。
+**/
+
 #   define ISA_BITFIELD                                                      \
       uintptr_t nonpointer        : 1;                                       \
       uintptr_t has_assoc         : 1;                                       \
@@ -68,10 +89,11 @@
       uintptr_t deallocating      : 1;                                       \
       uintptr_t has_sidetable_rc  : 1;                                       \
       uintptr_t extra_rc          : 19
+//这里的总和为1+1+1+33+6+1+1+1+19=64位，即占用了8个字节
 #   define RC_ONE   (1ULL<<45)
 #   define RC_HALF  (1ULL<<18)
 
-# elif __x86_64__
+# elif __x86_64__    //模拟器
 #   define ISA_MASK        0x00007ffffffffff8ULL
 #   define ISA_MAGIC_MASK  0x001f800000000001ULL
 #   define ISA_MAGIC_VALUE 0x001d800000000001ULL

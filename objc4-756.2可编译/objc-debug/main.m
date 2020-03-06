@@ -12,9 +12,9 @@
 #import <malloc/malloc.h>
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
-        
+        XZPerson *p = [XZPerson alloc];
      
-        
+        NSLog(@"%@",p);
     }
     return 0;
 }
