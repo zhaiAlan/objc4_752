@@ -29,6 +29,12 @@ height
  */
 @property (copy, nonatomic) NSString *course;
 
+/**
+ sex
+ */
+//@property (assign, nonatomic) int sex;
+//@property (nonatomic) char ch1;
+//@property (nonatomic) char ch2;
 @end
 
 NS_ASSUME_NONNULL_END

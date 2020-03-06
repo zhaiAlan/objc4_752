@@ -122,6 +122,7 @@
 		9672F7EE14D5F488007CEC96 /* NSObject.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9672F7ED14D5F488007CEC96 /* NSObject.mm */; };
 		E7E70AAF240CEEFF00BA3D34 /* XZPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = E7E70AAE240CEEFF00BA3D34 /* XZPerson.m */; };
 		E7E70AB2240E01C900BA3D34 /* XZTearcher.m in Sources */ = {isa = PBXBuildFile; fileRef = E7E70AB1240E01C900BA3D34 /* XZTearcher.m */; };
+		E7E70B172411E07700BA3D34 /* MemoryAlignment.m in Sources */ = {isa = PBXBuildFile; fileRef = E7E70B162411E07700BA3D34 /* MemoryAlignment.m */; };
 		E8923DA5116AB2820071B552 /* objc-block-trampolines.mm in Sources */ = {isa = PBXBuildFile; fileRef = E8923DA0116AB2820071B552 /* objc-block-trampolines.mm */; };
 		F9BCC71B205C68E800DD9AFC /* objc-blocktramps-arm64.s in Sources */ = {isa = PBXBuildFile; fileRef = 8379996D13CBAF6F007C2B5F /* objc-blocktramps-arm64.s */; };
 /* End PBXBuildFile section */
@@ -254,6 +255,8 @@
 		E7E70AAE240CEEFF00BA3D34 /* XZPerson.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XZPerson.m; sourceTree = "<group>"; };
 		E7E70AB0240E01C900BA3D34 /* XZTearcher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XZTearcher.h; sourceTree = "<group>"; };
 		E7E70AB1240E01C900BA3D34 /* XZTearcher.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XZTearcher.m; sourceTree = "<group>"; };
+		E7E70B152411E07700BA3D34 /* MemoryAlignment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MemoryAlignment.h; sourceTree = "<group>"; };
+		E7E70B162411E07700BA3D34 /* MemoryAlignment.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MemoryAlignment.m; sourceTree = "<group>"; };
 		E8923D9C116AB2820071B552 /* objc-blocktramps-i386.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = "objc-blocktramps-i386.s"; path = "runtime/objc-blocktramps-i386.s"; sourceTree = "<group>"; };
 		E8923D9D116AB2820071B552 /* objc-blocktramps-x86_64.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = "objc-blocktramps-x86_64.s"; path = "runtime/objc-blocktramps-x86_64.s"; sourceTree = "<group>"; };
 		E8923DA0116AB2820071B552 /* objc-block-trampolines.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = "objc-block-trampolines.mm"; path = "runtime/objc-block-trampolines.mm"; sourceTree = "<group>"; };
@@ -369,6 +372,8 @@
 			isa = PBXGroup;
 			children = (
 				6F8ADBF42314D1F300E235A9 /* main.m */,
+				E7E70B152411E07700BA3D34 /* MemoryAlignment.h */,
+				E7E70B162411E07700BA3D34 /* MemoryAlignment.m */,
 				E7E70AAD240CEEFF00BA3D34 /* XZPerson.h */,
 				E7E70AAE240CEEFF00BA3D34 /* XZPerson.m */,
 				E7E70AB0240E01C900BA3D34 /* XZTearcher.h */,
@@ -694,6 +699,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E7E70B172411E07700BA3D34 /* MemoryAlignment.m in Sources */,
 				E7E70AB2240E01C900BA3D34 /* XZTearcher.m in Sources */,
 				E7E70AAF240CEEFF00BA3D34 /* XZPerson.m in Sources */,
 				6F8ADBF52314D1F300E235A9 /* main.m in Sources */,

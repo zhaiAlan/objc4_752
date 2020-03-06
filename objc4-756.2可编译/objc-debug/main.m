@@ -10,12 +10,11 @@
 #import "XZTearcher.h"
 #import <objc/runtime.h>
 #import <malloc/malloc.h>
-
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
-        // insert code here...
-        XZPerson *object = [[XZPerson alloc] init];
-        NSLog(@"Hello, World! %@",object);
+        
+     
+        
     }
     return 0;
 }

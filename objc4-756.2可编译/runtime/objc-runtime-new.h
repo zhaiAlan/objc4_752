@@ -1111,6 +1111,7 @@ public:
         assert(data()->flags & RW_REALIZING);
 
         // Round up to 16-byte boundary, then divide to get 16-byte units
+        //这里就很类似于8字节对齐的逻辑处理方式，所以这里就是16字节处理
         newSize = ((newSize + 15) & ~15) / 16;
         
         uintptr_t newBits = newSize << FAST_SHIFTED_SIZE_SHIFT;

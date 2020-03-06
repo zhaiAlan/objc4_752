@@ -1755,6 +1755,10 @@ callAlloc(Class cls, bool checkNil, bool allocWithZone=false)
         if (fastpath(cls->canAllocFast())) {
             // No ctors, raw isa, etc. Go straight to the metal.
             bool dtor = cls->hasCxxDtor();
+            //底层进行开辟控件
+            /*
+           其中calloc函数意思是开辟一个内存空间，cls->bits.fastInstanceSize() 意思是开辟一个cls类的内存空间的大小，前面__count意思是倍数，其中cls->bits.fastInstanceSize()大小是遵循内存对齐原则开辟内存的
+            */
             id obj = (id)calloc(1, cls->bits.fastInstanceSize());
             if (slowpath(!obj)) return callBadAllocHandler(cls);
             obj->initInstanceIsa(cls, dtor);
