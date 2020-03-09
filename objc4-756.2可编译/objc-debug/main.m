@@ -11,13 +11,15 @@
 #import <objc/runtime.h>
 #import <malloc/malloc.h>
 #import "MemoryAlignment.h"
+#import "isaAnalyze.h"
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
-        [MemoryAlignment demo];
-        XZPerson *p = [XZPerson alloc];
+
+        XZPerson *p1 = [XZPerson alloc];
      
-        NSLog(@"%@",p);
+        NSLog(@"hello world");
+        
     }
     return 0;
 }

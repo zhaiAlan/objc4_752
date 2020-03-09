@@ -38,7 +38,6 @@ struct XZStruct3 {
 @implementation MemoryAlignment
 +(void)demo{
        NSLog(@"\nMyStruct1 ==%lu\nMyStruct2==%lu  \nMyStruct23==%lu",sizeof(MyStruct1),sizeof(MyStruct2),sizeof(MyStruct3));
-
                     /**
             １:数据成员对⻬规则：结构(struct)(或联合(union))的数据成员，第
             ⼀个数据成员放在offset为0的地⽅，以后每个数据成员存储的起始位置要

@@ -76,6 +76,7 @@ objc_object::isClass()
 inline Class 
 objc_object::getIsa() 
 {
+//   一般情况isTaggedPointer都会进入
     if (!isTaggedPointer()) return ISA();
 
     uintptr_t ptr = (uintptr_t)this;
@@ -159,6 +160,8 @@ objc_object::ISA()
     }
     return (Class)isa.bits;
 #else
+//    模拟器：define ISA_MASK        0x00007ffffffffff8ULL
+//    真机：  define ISA_MASK        0x0000000ffffffff8ULL
     return (Class)(isa.bits & ISA_MASK);
 #endif
 }
@@ -232,6 +235,7 @@ objc_object::initIsa(Class cls, bool nonpointer, bool hasCxxDtor)
         // isa.nonpointer is part of ISA_MAGIC_VALUE
 //       使用位域进行赋值
         newisa.has_cxx_dtor = hasCxxDtor;
+//      这里就就标明右移三为就是类的结构
         newisa.shiftcls = (uintptr_t)cls >> 3; //这个就是对类的绑定
 #endif
 

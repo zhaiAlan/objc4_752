@@ -121,6 +121,7 @@
 		87BB4EA70EC39854005D08E1 /* objc-probes.d in Sources */ = {isa = PBXBuildFile; fileRef = 87BB4E900EC39633005D08E1 /* objc-probes.d */; };
 		9672F7EE14D5F488007CEC96 /* NSObject.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9672F7ED14D5F488007CEC96 /* NSObject.mm */; };
 		E71073542412485600316416 /* initInstanceIsa.m in Sources */ = {isa = PBXBuildFile; fileRef = E71073532412485600316416 /* initInstanceIsa.m */; };
+		E794CA0124162E8B000905CB /* isaAnalyze.m in Sources */ = {isa = PBXBuildFile; fileRef = E794CA0024162E8B000905CB /* isaAnalyze.m */; };
 		E7E70AAF240CEEFF00BA3D34 /* XZPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = E7E70AAE240CEEFF00BA3D34 /* XZPerson.m */; };
 		E7E70AB2240E01C900BA3D34 /* XZTearcher.m in Sources */ = {isa = PBXBuildFile; fileRef = E7E70AB1240E01C900BA3D34 /* XZTearcher.m */; };
 		E7E70B172411E07700BA3D34 /* MemoryAlignment.m in Sources */ = {isa = PBXBuildFile; fileRef = E7E70B162411E07700BA3D34 /* MemoryAlignment.m */; };
@@ -254,6 +255,8 @@
 		D2AAC0630554660B00DB518D /* libobjc.A.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libobjc.A.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		E71073522412485600316416 /* initInstanceIsa.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = initInstanceIsa.h; sourceTree = "<group>"; };
 		E71073532412485600316416 /* initInstanceIsa.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = initInstanceIsa.m; sourceTree = "<group>"; };
+		E794C9FF24162E8B000905CB /* isaAnalyze.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = isaAnalyze.h; sourceTree = "<group>"; };
+		E794CA0024162E8B000905CB /* isaAnalyze.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = isaAnalyze.m; sourceTree = "<group>"; };
 		E7E70AAD240CEEFF00BA3D34 /* XZPerson.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XZPerson.h; sourceTree = "<group>"; };
 		E7E70AAE240CEEFF00BA3D34 /* XZPerson.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XZPerson.m; sourceTree = "<group>"; };
 		E7E70AB0240E01C900BA3D34 /* XZTearcher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XZTearcher.h; sourceTree = "<group>"; };
@@ -482,6 +485,8 @@
 			children = (
 				E71073522412485600316416 /* initInstanceIsa.h */,
 				E71073532412485600316416 /* initInstanceIsa.m */,
+				E794C9FF24162E8B000905CB /* isaAnalyze.h */,
+				E794CA0024162E8B000905CB /* isaAnalyze.m */,
 			);
 			path = isa;
 			sourceTree = "<group>";
@@ -716,6 +721,7 @@
 				E7E70AB2240E01C900BA3D34 /* XZTearcher.m in Sources */,
 				E7E70AAF240CEEFF00BA3D34 /* XZPerson.m in Sources */,
 				E71073542412485600316416 /* initInstanceIsa.m in Sources */,
+				E794CA0124162E8B000905CB /* isaAnalyze.m in Sources */,
 				6F8ADBF52314D1F300E235A9 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

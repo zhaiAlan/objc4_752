@@ -6,6 +6,8 @@ objc4_752
 
 initInstanceIsa分析：isa文件夹中initInstanceIsa类中demo方法
 
+isa分析代码注释： ：isa文件夹中isaAnalyze类中demo方法  
+
 
 
 相关文章可查看：
