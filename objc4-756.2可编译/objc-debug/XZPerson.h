@@ -10,6 +10,14 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface XZPerson : NSObject
+{
+    NSString *hobby;
+}
+@property (nonatomic, copy) NSString *nickName;
+
+- (void)sayHello;
++ (void)sayHappy;
+
 
 @end
 

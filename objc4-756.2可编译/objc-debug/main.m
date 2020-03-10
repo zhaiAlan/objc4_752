@@ -17,8 +17,9 @@ int main(int argc, const char * argv[]) {
     @autoreleasepool {
 
         XZPerson *p1 = [XZPerson alloc];
+        Class pClass = object_getClass(p1);
      
-        NSLog(@"hello world");
+        NSLog(@"%@ --- %@",p1,pClass);
         
     }
     return 0;

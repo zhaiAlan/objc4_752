@@ -8,10 +8,14 @@
 #import "XZPerson.h"
 
 @implementation XZPerson
-//+ (instancetype)allocWithZone:(struct _NSZone *)zone{
-//    if (self == [super allocWithZone:zone]) {
-//
-//    }
-//    return self;
-//}
+
+
+- (void)sayHello{
+    NSLog(@"XZPerson say : Hello!!!");
+}
+
++ (void)sayHappy{
+    NSLog(@"XZPerson say : Happy!!!");
+}
+
 @end

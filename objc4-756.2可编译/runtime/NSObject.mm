@@ -1750,8 +1750,15 @@ callAlloc(Class cls, bool checkNil, bool allocWithZone=false)
         // fixme store hasCustomAWZ in the non-meta class and 
         // add it to canAllocFast's summary
         /**
-         内部调用了bits.canAllocFast默认为false,可以自行点击进入查看
-         */
+            内部调用了bits.canAllocFast后分为2种情况
+                if(FAST_ALLOC){
+                  }else{
+                     默认为false,
+                 }
+                当我们查看FAST_ALLOC宏时，发现它的上方有个else 1 之后才是else中定义这个宏，
+                也就是说这个宏一直是不存在的
+                可以自行点击进入查看
+                  */
         if (fastpath(cls->canAllocFast())) {
             // No ctors, raw isa, etc. Go straight to the metal.
             bool dtor = cls->hasCxxDtor();

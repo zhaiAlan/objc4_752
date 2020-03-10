@@ -80,11 +80,12 @@ public:
 
 
 struct cache_t {
-    struct bucket_t *_buckets;
-    mask_t _mask;
-    mask_t _occupied;
+    struct bucket_t *_buckets; // 结构体指针8字节
+    mask_t _mask;  //typedef uint32_t mask_t;  4字节
+    mask_t _occupied; // 4字节
 
 public:
+//    向下为函数，函数不占内存
     struct bucket_t *buckets();
     mask_t mask();
     mask_t occupied();
@@ -243,9 +244,9 @@ struct entsize_list_tt {
 
 
 struct method_t {
-    SEL name;
-    const char *types;
-    MethodListIMP imp;
+    SEL name;  //方法名
+    const char *types; //方法签名
+    MethodListIMP imp; //方法的函数实现
 
     struct SortBySELAddress :
         public std::binary_function<const method_t&,
@@ -585,13 +586,13 @@ struct class_ro_t {
 
     const uint8_t * ivarLayout;
     
-    const char * name;
-    method_list_t * baseMethodList;
-    protocol_list_t * baseProtocols;
-    const ivar_list_t * ivars;
+    const char * name; //类名
+    method_list_t * baseMethodList; //方法列表
+    protocol_list_t * baseProtocols; //代理列表
+    const ivar_list_t * ivars;//成员变量
 
     const uint8_t * weakIvarLayout;
-    property_list_t *baseProperties;
+    property_list_t *baseProperties; //属性列表
 
     // This field exists only when RO_HAS_SWIFT_INITIALIZER is set.
     _objc_swiftMetadataInitializer __ptrauth_objc_method_list_imp _swiftMetadataInitializer_NEVER_USE[0];
@@ -642,7 +643,8 @@ template <typename Element, typename List>
 class list_array_tt {
     struct array_t {
         uint32_t count;
-        List* lists[0];
+        List* lists[0];//存储数据使用
+
 
         static size_t byteSize(uint32_t count) {
             return sizeof(array_t) + count*sizeof(lists[0]);
@@ -681,7 +683,7 @@ class list_array_tt {
             if (m != rhs.m) return true;
             return false;
         }
-
+////数组方式遍历取值
         const iterator& operator ++ () {
             assert(m != mEnd);
             m++;
@@ -879,9 +881,9 @@ struct class_rw_t {
 
     const class_ro_t *ro;
 
-    method_array_t methods;
-    property_array_t properties;
-    protocol_array_t protocols;
+    method_array_t methods;  //方法
+    property_array_t properties; // 属性
+    protocol_array_t protocols; // 代理
 
     Class firstSubclass;
     Class nextSiblingClass;
@@ -919,7 +921,7 @@ struct class_rw_t {
 struct class_data_bits_t {
 
     // Values are the FAST_ flags above.
-    uintptr_t bits;
+    uintptr_t bits; //8字节
 private:
     bool getBit(uintptr_t bit)
     {
@@ -1189,9 +1191,10 @@ public:
 
 
 struct objc_class : objc_object {
-//    Class ISA;
-    Class superclass;  //父类
-    cache_t cache;             // formerly cache pointer and vtable
+//    Class ISA;    //8字节
+    Class superclass;  //父类  8字节
+    cache_t cache; //缓存   结构体所占大小需要看内部定义16字节16字节
+    // formerly cache pointer and vtable
     class_data_bits_t bits;    // class_rw_t * plus custom rr/alloc flags
 
     class_rw_t *data() { 

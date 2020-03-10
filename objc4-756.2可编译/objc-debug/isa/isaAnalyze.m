@@ -6,6 +6,8 @@
 //
 
 #import "isaAnalyze.h"
+#import "XZTearcher.h"
+#import "XZPerson.h"
 
 @implementation isaAnalyze
 - (void)demo{
