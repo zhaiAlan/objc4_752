@@ -465,7 +465,7 @@ bool cache_t::canBeFreed()
     return !isConstantEmptyCache();
 }
 
-
+//第一次进入old ：0 New 为4
 void cache_t::reallocate(mask_t oldCapacity, mask_t newCapacity)
 {
     bool freeOld = canBeFreed();
@@ -479,7 +479,7 @@ void cache_t::reallocate(mask_t oldCapacity, mask_t newCapacity)
 
     assert(newCapacity > 0);
     assert((uintptr_t)(mask_t)(newCapacity-1) == newCapacity-1);
-
+//  这里将新的buckete和mask:4-1进行写入，这就可以看出第一个为mask =3
     setBucketsAndMask(newBuckets, newCapacity - 1);
     
     if (freeOld) {
@@ -519,17 +519,29 @@ void cache_t::bad_cache(id receiver, SEL sel, Class isa)
 bucket_t * cache_t::find(SEL s, id receiver)
 {
     assert(s != 0);
-
+ /***
+  Method
+  select 找到---- imp
+  */ 
     bucket_t *b = buckets();
     mask_t m = mask();
+    // 通过cache_hash函数【begin  = k & m】计算出key值 k 对应的 index值 begin，用来记录查询起始索引
     mask_t begin = cache_hash(s, m);
+  // begin 赋值给 i，用于切换索引
     mask_t i = begin;
     do {
         if (b[i].sel() == 0  ||  b[i].sel() == s) {
+            //用这个i从散列表取值，如果取出来的bucket_t的 key = k，则查询成功，返回该bucket_t，
+            //如果key = 0，说明在索引i的位置上还没有缓存过方法，同样需要返回该bucket_t，用于中止缓存查询。
+
             return &b[i];
         }
     } while ((i = cache_next(i, m)) != begin);
-
+       // 这一步其实相当于 i = i-1,回到上面do循环里面，相当于查找散列表上一个单元格里面的元素，再次进行key值 k的比较，
+       //当i=0时，也就i指向散列表最首个元素索引的时候重新将mask赋值给i，使其指向散列表最后一个元素，重新开始反向遍历散列表，
+       //其实就相当于绕圈，把散列表头尾连起来，不就是一个圈嘛，从begin值开始，递减索引值，当走过一圈之后，必然会重新回到begin值，
+       //如果此时还没有找到key对应的bucket_t，或者是空的bucket_t，则循环结束，说明查找失败，调用bad_cache方法。
+    
     // hack
     Class cls = (Class)((uintptr_t)this - offsetof(objc_class, cache));
     cache_t::bad_cache(receiver, (SEL)s, cls);
@@ -541,7 +553,13 @@ void cache_t::expand()
     cacheUpdateLock.assertLocked();
     
     uint32_t oldCapacity = capacity();
-    uint32_t newCapacity = oldCapacity ? oldCapacity*2 : INIT_CACHE_SIZE;
+    /**
+     enum {
+         INIT_CACHE_SIZE_LOG2 = 2,
+         INIT_CACHE_SIZE      = (1 << INIT_CACHE_SIZE_LOG2) 1左移2位为4
+     };
+     */
+    uint32_t newCapacity = oldCapacity ? oldCapacity*2 : INIT_CACHE_SIZE; //4
 
     if ((uint32_t)(mask_t)newCapacity != newCapacity) {
         // mask overflow - can't grow further
@@ -562,20 +580,25 @@ static void cache_fill_nolock(Class cls, SEL sel, IMP imp, id receiver)
 
     // Make sure the entry wasn't added to the cache by some other thread 
     // before we grabbed the cacheUpdateLock.
+//    从缓存中取IMP如果取到就直接返回
     if (cache_getImp(cls, sel)) return;
-
+//如果没有回走下面
     cache_t *cache = getCache(cls);
 
     // Use the cache as-is if it is less than 3/4 full
     mask_t newOccupied = cache->occupied() + 1;
     mask_t capacity = cache->capacity();
+//    如果是第一次就直接创建空间
     if (cache->isConstantEmptyCache()) {
         // Cache is read-only. Replace it.
+        // 重新开辟新的cache，第一次到这里capacity,mask = 0 所以使用 INIT_CACHE_SIZE，为4
         cache->reallocate(capacity, capacity ?: INIT_CACHE_SIZE);
     }
+//    如果这里小于3/4就继续了
     else if (newOccupied <= capacity / 4 * 3) {
         // Cache is less than 3/4 full. Use it as-is.
     }
+//    如果大于3/4就需要扩容了
     else {
         // Cache is too full. Expand it.
         cache->expand();
@@ -584,8 +607,10 @@ static void cache_fill_nolock(Class cls, SEL sel, IMP imp, id receiver)
     // Scan for the first unused slot and insert there.
     // There is guaranteed to be an empty slot because the 
     // minimum size is 4 and we resized at 3/4 full.
+//    sel 为方法名 receiver 类的一些信息
     bucket_t *bucket = cache->find(sel, receiver);
     if (bucket->sel() == 0) cache->incrementOccupied();
+//    以sel为key imp为value进行写入数据
     bucket->set<Atomic>(sel, imp);
 }
 

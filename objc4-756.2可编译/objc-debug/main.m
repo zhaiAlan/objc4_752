@@ -12,15 +12,12 @@
 #import <malloc/malloc.h>
 #import "MemoryAlignment.h"
 #import "isaAnalyze.h"
+#import "ClassAnalyze.h"
+
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
 
-        XZPerson *p1 = [XZPerson alloc];
-        Class pClass = object_getClass(p1);
-     
-        NSLog(@"%@ --- %@",p1,pClass);
-        
     }
     return 0;
 }

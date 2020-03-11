@@ -9,13 +9,4 @@
 
 @implementation XZPerson
 
-
-- (void)sayHello{
-    NSLog(@"XZPerson say : Hello!!!");
-}
-
-+ (void)sayHappy{
-    NSLog(@"XZPerson say : Happy!!!");
-}
-
 @end
