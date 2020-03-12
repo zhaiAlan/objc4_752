@@ -2031,14 +2031,17 @@ void arr_init(void)
 }
 
 + (BOOL)isMemberOfClass:(Class)cls {
+//     元类  VS  类
     return object_getClass((id)self) == cls;
 }
 
 - (BOOL)isMemberOfClass:(Class)cls {
+//    类 vs 类
     return [self class] == cls;
 }
 
 + (BOOL)isKindOfClass:(Class)cls {
+//    元类   VS  类+父类
     for (Class tcls = object_getClass((id)self); tcls; tcls = tcls->superclass) {
         if (tcls == cls) return YES;
     }
@@ -2046,6 +2049,7 @@ void arr_init(void)
 }
 
 - (BOOL)isKindOfClass:(Class)cls {
+//    类    VS 类+ 类的父类
     for (Class tcls = [self class]; tcls; tcls = tcls->superclass) {
         if (tcls == cls) return YES;
     }
