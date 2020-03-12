@@ -213,6 +213,7 @@ LExit$0:
 .if $0 == GETIMP
 	cbz	p9, LGetImpMiss
 .elseif $0 == NORMAL
+//nomal情况进入这个
 	cbz	p9, __objc_msgSend_uncached
 .elseif $0 == LOOKUP
 	cbz	p9, __objc_msgLookup_uncached
@@ -235,10 +236,12 @@ LExit$0:
 
 .macro CacheLookup
 	// p1 = SEL, p16 = isa
+   //平移16字节找到我们的cache
 	ldp	p10, p11, [x16, #CACHE]	// p10 = buckets, p11 = occupied|mask
 #if !__LP64__
 	and	w11, w11, 0xffff	// p11 = mask
 #endif
+//这里对应的cache find方法
 	and	w12, w1, w11		// x12 = _cmd & mask
 	add	p12, p10, p12, LSL #(1+PTRSHIFT)
 		             // p12 = buckets + ((_cmd & mask) << (1+PTRSHIFT))
@@ -311,9 +314,11 @@ _objc_debug_taggedpointer_ext_classes:
 #else
 	b.eq	LReturnZero
 #endif
+//person  --isa -->可以查找到元类
 	ldr	p13, [x0]		// p13 = isa
 	GetClassFromIsa_p16 p13		// p16 = class
 LGetIsaDone:
+//查找缓存
 	CacheLookup NORMAL		// calls imp or objc_msgSend_uncached
 
 #if SUPPORT_TAGGED_POINTERS
@@ -437,7 +442,11 @@ LLookup_Nil:
 
 	END_ENTRY _objc_msgLookupSuper2
 
-
+//拿到isa --类
+// cache_t -bucket
+// 方法 存在 bti - rw -ro ,methodList中
+//汇编对未知参数进行确定化后进入静态语言
+//__class_lookupMethodAndLoadCache3
 .macro MethodTableLookup
 	
 	// push frame
@@ -459,6 +468,7 @@ LLookup_Nil:
 
 	// receiver and selector already in x0 and x1
 	mov	x2, x16
+//真正走到这个方法
 	bl	__class_lookupMethodAndLoadCache3
 
 	// IMP in x0

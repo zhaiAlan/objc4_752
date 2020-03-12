@@ -133,7 +133,7 @@ int main(int argc, const char * argv[]) {
          // 来一个方法就缓存 - 有一个特殊的处理
         */
 
-        XZPerson *p1 = [XZPerson alloc];
+        XZPerson *p1 = [[XZPerson alloc] init];
         Class pClass = [XZPerson class];
         [p1 sayHello];
         [p1 sayCat];
