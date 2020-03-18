@@ -237,24 +237,32 @@ LExit$0:
 .macro CacheLookup
 	// p1 = SEL, p16 = isa
    //平移16字节找到我们的cache
+//这里需要注意的是p10,p11寄存器都是占8字节
+//将p10中存入cache中buckets(8字节)属性
+//p11寄存器中存入2个属性occupied和mask 因为这两个属性都是只占4字节，所以可以放入一个寄存器中
+//p11前4位存mask  后四位存occupied
 	ldp	p10, p11, [x16, #CACHE]	// p10 = buckets, p11 = occupied|mask
 #if !__LP64__
+//w表示寄存器的低32位所以这里直接使用w11就能直接取出mask，
 	and	w11, w11, 0xffff	// p11 = mask
 #endif
-//这里对应的cache find方法
+//这里对应的cache find方法中的cache_hash方法取出初始循环编号存入x12寄存器
 	and	w12, w1, w11		// x12 = _cmd & mask
 	add	p12, p10, p12, LSL #(1+PTRSHIFT)
 		             // p12 = buckets + ((_cmd & mask) << (1+PTRSHIFT))
 
 	ldp	p17, p9, [x12]		// {imp, sel} = *bucket
+//下面就是find中的while循环
 1:	cmp	p9, p1			// if (bucket->sel != _cmd)
 	b.ne	2f			//     scan more
+//缓存命中
 	CacheHit $0			// call or return imp
-	
+//没找到缓存
 2:	// not hit: p12 = not-hit bucket
 	CheckMiss $0			// miss if bucket->sel == 0
 	cmp	p12, p10		// wrap if bucket == buckets
 	b.eq	3f
+//未找到继续循环查找
 	ldp	p17, p9, [x12, #-BUCKET_SIZE]!	// {imp, sel} = *--bucket
 	b	1b			// loop
 
@@ -276,7 +284,7 @@ LExit$0:
 	b.eq	3f
 	ldp	p17, p9, [x12, #-BUCKET_SIZE]!	// {imp, sel} = *--bucket
 	b	1b			// loop
-
+//未找到
 3:	// double wrap
 	JumpMiss $0
 	
