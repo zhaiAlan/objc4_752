@@ -8,13 +8,12 @@
 #import "XZPerson.h"
 
 @implementation XZPerson
-- (void)sayHello{
-    NSLog(@"XZPerson say : hello!!!");
+- (void)sayNB{
+    NSLog(@"%s",__func__);
 }
 
-
-+ (void)sayHappy{
-    NSLog(@"XZPerson say : Happy!!!");
++ (void)sayHappay{
+    NSLog(@"%s",__func__);
 }
 
 @end

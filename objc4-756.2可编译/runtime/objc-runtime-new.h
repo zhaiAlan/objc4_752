@@ -1387,6 +1387,7 @@ struct objc_class : objc_object {
 
     // Locking: To prevent concurrent realization, hold runtimeLock.
     bool isRealized() {
+//RW_REALIZED 这里是拿出bits中的 class_rw_t 中的 data中的Method查看是否有
         return data()->flags & RW_REALIZED;
     }
 

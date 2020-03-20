@@ -557,7 +557,7 @@ LGetImpMiss:
 	ENTRY __objc_msgForward
 
 	adrp	x17, __objc_forward_handler@PAGE
-	ldr	p17, [x17, __objc_forward_handler@PAGEOFF]
+	ldr	p17, [x17, __objc_forward_handler@PAGEOFF] //调用_objc_forward_handler 方法
 	TailCallFunctionPointer x17
 	
 	END_ENTRY __objc_msgForward

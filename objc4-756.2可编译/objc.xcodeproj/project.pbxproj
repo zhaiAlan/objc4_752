@@ -134,6 +134,8 @@
 		E715122C241A23A50034F524 /* XZPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = E715122B241A23A50034F524 /* XZPerson.m */; };
 		E715122D241A29330034F524 /* libobjc.A.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D2AAC0630554660B00DB518D /* libobjc.A.dylib */; };
 		E715122E241A29330034F524 /* libobjc.A.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = D2AAC0630554660B00DB518D /* libobjc.A.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		E753AD7A242216CF00B5290B /* NSObject+XZ.m in Sources */ = {isa = PBXBuildFile; fileRef = E753AD79242216CF00B5290B /* NSObject+XZ.m */; };
+		E753AD7D24221AA500B5290B /* XZTeacher.m in Sources */ = {isa = PBXBuildFile; fileRef = E753AD7C24221AA500B5290B /* XZTeacher.m */; };
 		E794CA0124162E8B000905CB /* isaAnalyze.m in Sources */ = {isa = PBXBuildFile; fileRef = E794CA0024162E8B000905CB /* isaAnalyze.m */; };
 		E794CA1E241734E6000905CB /* MemoryAlignment.m in Sources */ = {isa = PBXBuildFile; fileRef = E794CA1D241734E6000905CB /* MemoryAlignment.m */; };
 		E7E70AAF240CEEFF00BA3D34 /* XZPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = E7E70AAE240CEEFF00BA3D34 /* XZPerson.m */; };
@@ -363,6 +365,11 @@
 		E7151225241A23260034F524 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		E715122A241A23A50034F524 /* XZPerson.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XZPerson.h; sourceTree = "<group>"; };
 		E715122B241A23A50034F524 /* XZPerson.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XZPerson.m; sourceTree = "<group>"; };
+		E753AD74242212E300B5290B /* objc_msgSend反汇编伪代码.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "objc_msgSend反汇编伪代码.h"; sourceTree = "<group>"; };
+		E753AD78242216CF00B5290B /* NSObject+XZ.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+XZ.h"; sourceTree = "<group>"; };
+		E753AD79242216CF00B5290B /* NSObject+XZ.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+XZ.m"; sourceTree = "<group>"; };
+		E753AD7B24221AA500B5290B /* XZTeacher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XZTeacher.h; sourceTree = "<group>"; };
+		E753AD7C24221AA500B5290B /* XZTeacher.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XZTeacher.m; sourceTree = "<group>"; };
 		E794C9FF24162E8B000905CB /* isaAnalyze.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = isaAnalyze.h; sourceTree = "<group>"; };
 		E794CA0024162E8B000905CB /* isaAnalyze.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = isaAnalyze.m; sourceTree = "<group>"; };
 		E794CA1C241734E6000905CB /* MemoryAlignment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemoryAlignment.h; sourceTree = "<group>"; };
@@ -654,6 +661,11 @@
 				E71511E32419DB500034F524 /* main.m */,
 				E71511ED2419DC630034F524 /* XZPerson.h */,
 				E71511EE2419DC630034F524 /* XZPerson.m */,
+				E753AD7B24221AA500B5290B /* XZTeacher.h */,
+				E753AD7C24221AA500B5290B /* XZTeacher.m */,
+				E753AD78242216CF00B5290B /* NSObject+XZ.h */,
+				E753AD79242216CF00B5290B /* NSObject+XZ.m */,
+				E753AD74242212E300B5290B /* objc_msgSend反汇编伪代码.h */,
 			);
 			path = XZMethodAnalyze;
 			sourceTree = "<group>";
@@ -1050,7 +1062,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E753AD7D24221AA500B5290B /* XZTeacher.m in Sources */,
 				E71511EF2419DC630034F524 /* XZPerson.m in Sources */,
+				E753AD7A242216CF00B5290B /* NSObject+XZ.m in Sources */,
 				E71511E42419DB500034F524 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

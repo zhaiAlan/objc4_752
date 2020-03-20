@@ -10,9 +10,10 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface XZPerson : NSObject
-- (void)sayHello;
-
-+ (void)sayHappy;
+- (void)sayNB;
++ (void)sayHappay;
+//这个方法只声明不实现
+- (void)saySomthing;
 @end
 
 NS_ASSUME_NONNULL_END

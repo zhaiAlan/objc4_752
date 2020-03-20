@@ -1915,8 +1915,8 @@ static Class realizeClassWithoutSwift(Class cls)
 
     const class_ro_t *ro;
     class_rw_t *rw;
-    Class supercls;
-    Class metacls;
+    Class supercls;//父类
+    Class metacls;//元类  类方法查找需要在元类中
     bool isMeta;
 
     if (!cls) return nil;
@@ -1963,7 +1963,9 @@ static Class realizeClassWithoutSwift(Class cls)
     //   or that Swift's initializers have already been called.
     //   fixme that assumption will be wrong if we add support
     //   for ObjC subclasses of Swift classes.
+//    这里就是递归查找，父类
     supercls = realizeClassWithoutSwift(remapClass(cls->superclass));
+//    这里是元类递归查找
     metacls = realizeClassWithoutSwift(remapClass(cls->ISA()));
 
 #if SUPPORT_NONPOINTER_ISA
@@ -2035,7 +2037,7 @@ static Class realizeClassWithoutSwift(Class cls)
         addRootClass(cls);
     }
 
-    // Attach categories
+    // Attach categories 附加类处理
     methodizeClass(cls);
 
     return cls;
@@ -2178,7 +2180,8 @@ realizeClassMaybeSwiftMaybeRelock(Class cls, mutex_t& lock, bool leaveLocked)
 {
     lock.assertLocked();
 
-    if (!cls->isSwiftStable_ButAllowLegacyForNow()) {
+    if (!cls->isSwiftStable_ButAllowLegacyForNow()) {//非swift类处理
+
         // Non-Swift class. Realize it now with the lock still held.
         // fixme wrong in the future for objc subclasses of swift classes
         realizeClassWithoutSwift(cls);
@@ -4943,7 +4946,9 @@ static method_t *findMethodInSortedMethodList(SEL key, const method_list_t *list
     const method_t *probe;
     uintptr_t keyValue = (uintptr_t)key;
     uint32_t count;
-    
+//    二分查找方法
+       // >>1 表示将变量n的各个二进制位顺序右移1位，最高位补二进制0
+       // count >>= 1 如果count为偶数则值变为(count / 2)；如果count为奇数则值变为(count-1) / 2
     for (count = list->count; count != 0; count >>= 1) {
         probe = base + (count >> 1);
         
@@ -4953,12 +4958,13 @@ static method_t *findMethodInSortedMethodList(SEL key, const method_list_t *list
             // `probe` is a match.
             // Rewind looking for the *first* occurrence of this value.
             // This is required for correct category overrides.
+            // 继续向前二分查询
             while (probe > first && keyValue == (uintptr_t)probe[-1].name) {
                 probe--;
             }
             return (method_t *)probe;
         }
-        
+        // 如果keyValue > probeValue 则折半向后查询
         if (keyValue > probeValue) {
             base = probe + 1;
             count--;
@@ -4979,6 +4985,7 @@ static method_t *search_method_list(const method_list_t *mlist, SEL sel)
     int methodListHasExpectedSize = mlist->entsize() == sizeof(method_t);
     
     if (__builtin_expect(methodListIsFixedUp && methodListHasExpectedSize, 1)) {
+// 如果方法列表已经排序好了，则通过二分查找法查找方法，以节省时间
         return findMethodInSortedMethodList(sel, mlist);
     } else {
         // Linear search of unsorted method list
@@ -4990,6 +4997,7 @@ static method_t *search_method_list(const method_list_t *mlist, SEL sel)
 #if DEBUG
     // sanity-check negative results
     if (mlist->isFixedUp()) {
+        // 如果方法列表没有排序好就遍历查找
         for (auto& meth : *mlist) {
             if (meth.name == sel) {
                 _objc_fatal("linear search worked when binary search did not");
@@ -5015,6 +5023,7 @@ getMethodNoSuper_nolock(Class cls, SEL sel)
          mlists != end;
          ++mlists)
     {
+//       利用二分查找寻找方法
         method_t *m = search_method_list(*mlists, sel);
         if (m) return m;
     }
@@ -5096,7 +5105,7 @@ static void resolveClassMethod(Class cls, SEL sel, id inst)
     runtimeLock.assertUnlocked();
     assert(cls->isRealized());
     assert(cls->isMetaClass());
-
+    //查找下类是否实现了resolveClassMethod方法，NSObject类已经实现了
     if (! lookUpImpOrNil(cls, SEL_resolveClassMethod, inst, 
                          NO/*initialize*/, YES/*cache*/, NO/*resolver*/)) 
     {
@@ -5115,6 +5124,7 @@ static void resolveClassMethod(Class cls, SEL sel, id inst)
         }
     }
     BOOL (*msg)(Class, SEL, SEL) = (typeof(msg))objc_msgSend;
+    //切记，此处是向元类发送resolveClassMethod消息，也就是调用resolveClassMethod方法
     bool resolved = msg(nonmeta, SEL_resolveClassMethod, sel);
 
     // Cache the result (good or bad) so the resolver doesn't fire next time.
@@ -5151,19 +5161,22 @@ static void resolveInstanceMethod(Class cls, SEL sel, id inst)
 {
     runtimeLock.assertUnlocked();
     assert(cls->isRealized());
-
+//查找方法中是否有实现resolveInstanceMethod这个方法
     if (! lookUpImpOrNil(cls->ISA(), SEL_resolveInstanceMethod, cls, 
                          NO/*initialize*/, YES/*cache*/, NO/*resolver*/)) 
     {
         // Resolver not implemented.
         return;
     }
-
+    //发送SEL_resolveInstanceMethod消息，
     BOOL (*msg)(Class, SEL, SEL) = (typeof(msg))objc_msgSend;
+    //发送消息SEL_resolveInstanceMethod 传参为我们的方法编号
+    //崩溃的方法不是这个方法，说明再NSObject方法中有实现这个方法
     bool resolved = msg(cls, SEL_resolveInstanceMethod, sel);
 
     // Cache the result (good or bad) so the resolver doesn't fire next time.
     // +resolveInstanceMethod adds to self a.k.a. cls
+//再次查找类中是否sel方法，因为resolveInstanceMethod方法执行后可能动态进行添加了，resolver是不要进行消息转发了
     IMP imp = lookUpImpOrNil(cls, sel, inst, 
                              NO/*initialize*/, YES/*cache*/, NO/*resolver*/);
 
@@ -5197,14 +5210,17 @@ static void resolveMethod(Class cls, SEL sel, id inst)
     runtimeLock.assertUnlocked();
     assert(cls->isRealized());
 
-    if (! cls->isMetaClass()) {
+    if (! cls->isMetaClass()) {//不是元类
+//判断类不是元类，那sel就是实例方法，那就先转发resolveInstanceMethod方法，判断有没有实现resolveInstanceMethod，没实现就不做处理
         // try [cls resolveInstanceMethod:sel]
         resolveInstanceMethod(cls, sel, inst);
     } 
     else {
         // try [nonMetaClass resolveClassMethod:sel]
         // and [cls resolveInstanceMethod:sel]
+        //先转发resolveClassMethod,会先查找下resolveClassMethod，如果没实现就不做处理
         resolveClassMethod(cls, sel, inst);
+        //再次查找下方法，如果没有的话，就再转发一下resolveInstanceMethod方法
         if (!lookUpImpOrNil(cls, sel, inst, 
                             NO/*initialize*/, YES/*cache*/, NO/*resolver*/)) 
         {
@@ -5232,6 +5248,7 @@ log_and_fill_cache(Class cls, IMP imp, SEL sel, id receiver, Class implementer)
         if (!cacheIt) return;
     }
 #endif
+//   写入缓存
     cache_fill (cls, sel, imp, receiver);
 }
 
@@ -5244,7 +5261,12 @@ log_and_fill_cache(Class cls, IMP imp, SEL sel, id receiver, Class implementer)
 **********************************************************************/
 IMP _class_lookupMethodAndLoadCache3(id obj, SEL sel, Class cls)
 {
-
+/**
+ obj 当前对象
+ sel 方法名称
+ cls 实例方法为类    类方法为元类
+ NO   cache 没有缓存才会进入这里，有的话，从缓存哪里就返回出去了
+ */
     return lookUpImpOrForward(cls, sel, obj, 
                               YES/*initialize*/, NO/*cache*/, YES/*resolver*/);
 }
@@ -5271,6 +5293,7 @@ IMP lookUpImpOrForward(Class cls, SEL sel, id inst,
     runtimeLock.assertUnlocked();
 
     // Optimistic cache lookup
+//    查找方法进入的时候这里是NO
     if (cache) {
         imp = cache_getImp(cls, sel);
         if (imp) return imp;
@@ -5284,15 +5307,18 @@ IMP lookUpImpOrForward(Class cls, SEL sel, id inst,
     // Otherwise, a category could be added but ignored indefinitely because
     // the cache was re-filled with the old value after the cache flush on
     // behalf of the category.
-
+//加锁，防止多线程访问
     runtimeLock.lock();
+//   内部对class 的判断，是否被编译
     checkIsKnownClass(cls);
 
+    // 这里是拿出类中的bits中的 class_rw_t 中的 data中的Method查看是否有
+    //为查找方法做准备条件，判断类有没有加载好，如果没有加载好，那就先加载一下类信息，准备好父类、元类
     if (!cls->isRealized()) {
         cls = realizeClassMaybeSwiftAndLeaveLocked(cls, runtimeLock);
         // runtimeLock may have been dropped but is now locked again
     }
-
+    //确定类已经加载完成，
     if (initialize && !cls->isInitialized()) {
         cls = initializeAndLeaveLocked(cls, inst, runtimeLock);
         // runtimeLock may have been dropped but is now locked again
@@ -5308,41 +5334,48 @@ IMP lookUpImpOrForward(Class cls, SEL sel, id inst,
     runtimeLock.assertLocked();
 
     // Try this class's cache.
-
+  //判断该方法从缓存里面查找一遍,如果是方法调用，会先走cache，一般这里imp 是取不到的，别的方法可能会调用这里
     imp = cache_getImp(cls, sel);
     if (imp) goto done;
 
     // Try this class's method lists.
+//    这里的括号是为了行程局部作用域，避免局部变量命名重
     {
+//        在MethodList 中进行查找方法
         Method meth = getMethodNoSuper_nolock(cls, sel);
         if (meth) {
+//            找到方法后，填充到缓存中去，内部调用cache_fill_nolock
             log_and_fill_cache(cls, meth->imp, sel, inst, cls);
             imp = meth->imp;
+      //直接跳到done这个点，C语言调用方式goto
             goto done;
         }
     }
 
-    // Try superclass caches and method lists.
+    // Try superclass caches and method lists.查找父类方法
     {
         unsigned attempts = unreasonableClassCount();
+//        这里循环冲父类中进行查找
         for (Class curClass = cls->superclass;
              curClass != nil;
              curClass = curClass->superclass)
         {
             // Halt if there is a cycle in the superclass chain.
-            if (--attempts == 0) {
+            if (--attempts == 0) {//内存出错
                 _objc_fatal("Memory corruption in class list.");
             }
             
-            // Superclass cache.
+            // Superclass cache. //从父类的缓存中查找一下
             imp = cache_getImp(curClass, sel);
             if (imp) {
+//              可能是苹果大大还有其他的类型吧
                 if (imp != (IMP)_objc_msgForward_impcache) {
                     // Found the method in a superclass. Cache it in this class.
                     log_and_fill_cache(cls, imp, sel, inst, curClass);
                     goto done;
                 }
                 else {
+//如果是_objc_msgForward_impcache方法，就退出，不需要遍历了，因为_objc_msgForward_impcache这个方法就是未实现时候转发用的
                     // Found a forward:: entry in a superclass.
                     // Stop searching, but don't cache yet; call method 
                     // resolver for this class first.
@@ -5351,6 +5384,7 @@ IMP lookUpImpOrForward(Class cls, SEL sel, id inst,
             }
             
             // Superclass method list.
+//           父类缓存中没找到就去父类的方法列表中查找
             Method meth = getMethodNoSuper_nolock(curClass, sel);
             if (meth) {
                 log_and_fill_cache(cls, meth->imp, sel, inst, curClass);
@@ -5361,21 +5395,26 @@ IMP lookUpImpOrForward(Class cls, SEL sel, id inst,
     }
 
     // No implementation found. Try method resolver once.
-
+    //如果方法仍然没找到，就开始做方法消息动态解析了
     if (resolver  &&  !triedResolver) {
         runtimeLock.unlock();
+    
+//     实例方法解析：resolveInstanceMethod
+//     类方法解析：resolveClassMethod
         resolveMethod(cls, sel, inst);
         runtimeLock.lock();
         // Don't cache the result; we don't hold the lock so it may have 
         // changed already. Re-do the search from scratch instead.
+        //设置为NO，防止因为消息动态解析导致死循环
         triedResolver = YES;
         goto retry;
     }
 
     // No implementation found, and method resolver didn't help. 
     // Use forwarding.
-
+    //如果第一次转发还是没用的话，就取出_objc_msgForward_impcache这个方法指针
     imp = (IMP)_objc_msgForward_impcache;
+    //缓存起来将指针返回回去执行
     cache_fill(cls, sel, imp, inst);
 
  done:

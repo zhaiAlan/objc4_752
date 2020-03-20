@@ -471,7 +471,9 @@ extern bool logMessageSend(bool isClassMethod,
                     const char *implementingClass,
                     SEL selector);
 
-/* message dispatcher */
+/* message dispatcher
+ //这里的extern  标示外部也可以调用这个方法
+ */
 extern IMP _class_lookupMethodAndLoadCache3(id, SEL, Class);
 
 #if !OBJC_OLD_DISPATCH_PROTOTYPES
