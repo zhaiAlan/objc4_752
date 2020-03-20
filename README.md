@@ -18,3 +18,6 @@ iOS底层探索四(isa初探-联合体，位域，内存优化)   ：https://blo
 iOS底层探索五(isa与类的关系)                :  https://blog.csdn.net/ZhaiAlan/article/details/104746630      objc_debug工程
 iOS底层探索六(类的分析上)                     ：https://blog.csdn.net/ZhaiAlan/article/details/104768502    XZClassAnalyze工程
 iOS底层探索七(类的分析下)                     ：https://blog.csdn.net/ZhaiAlan/article/details/104789766    XZClassAnalyze工程
+iOS底层探索八(方法本质上)                     ：https://blog.csdn.net/ZhaiAlan/article/details/104813887
+iOS底层探索九(方法的本质下objc_msgSend慢速及方法转发初探)                                     ：https://blog.csdn.net/ZhaiAlan/article/details/104947417
+iOS 面试题(iskindof)                               ：https://blog.csdn.net/ZhaiAlan/article/details/104821045
