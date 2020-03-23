@@ -5161,14 +5161,14 @@ static void resolveInstanceMethod(Class cls, SEL sel, id inst)
 {
     runtimeLock.assertUnlocked();
     assert(cls->isRealized());
-//查找方法中是否有实现resolveInstanceMethod这个方法
+//查找系统方法中是否有实现resolveInstanceMethod这个方法，这里会根据继承链进行查找
     if (! lookUpImpOrNil(cls->ISA(), SEL_resolveInstanceMethod, cls, 
                          NO/*initialize*/, YES/*cache*/, NO/*resolver*/)) 
     {
         // Resolver not implemented.
         return;
     }
-    //发送SEL_resolveInstanceMethod消息，
+    //发送SEL_resolveInstanceMethod消息，系统给你一次机会-->你是不是要针对这个没有实现的sel进行操作一下
     BOOL (*msg)(Class, SEL, SEL) = (typeof(msg))objc_msgSend;
     //发送消息SEL_resolveInstanceMethod 传参为我们的方法编号
     //崩溃的方法不是这个方法，说明再NSObject方法中有实现这个方法
@@ -5240,6 +5240,7 @@ static void
 log_and_fill_cache(Class cls, IMP imp, SEL sel, id receiver, Class implementer)
 {
 #if SUPPORT_MESSAGE_LOGGING
+    //如果有这个objcMsgLogEnabled变量就会写入日志
     if (objcMsgLogEnabled) {
         bool cacheIt = logMessageSend(implementer->isMetaClass(), 
                                       cls->nameForLogging(),

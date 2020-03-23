@@ -136,6 +136,7 @@
 		E715122E241A29330034F524 /* libobjc.A.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = D2AAC0630554660B00DB518D /* libobjc.A.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		E753AD7A242216CF00B5290B /* NSObject+XZ.m in Sources */ = {isa = PBXBuildFile; fileRef = E753AD79242216CF00B5290B /* NSObject+XZ.m */; };
 		E753AD7D24221AA500B5290B /* XZTeacher.m in Sources */ = {isa = PBXBuildFile; fileRef = E753AD7C24221AA500B5290B /* XZTeacher.m */; };
+		E778C7C52428B87F00C1CEA6 /* XZStudent.m in Sources */ = {isa = PBXBuildFile; fileRef = E778C7C42428B87F00C1CEA6 /* XZStudent.m */; };
 		E794CA0124162E8B000905CB /* isaAnalyze.m in Sources */ = {isa = PBXBuildFile; fileRef = E794CA0024162E8B000905CB /* isaAnalyze.m */; };
 		E794CA1E241734E6000905CB /* MemoryAlignment.m in Sources */ = {isa = PBXBuildFile; fileRef = E794CA1D241734E6000905CB /* MemoryAlignment.m */; };
 		E7E70AAF240CEEFF00BA3D34 /* XZPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = E7E70AAE240CEEFF00BA3D34 /* XZPerson.m */; };
@@ -370,6 +371,8 @@
 		E753AD79242216CF00B5290B /* NSObject+XZ.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+XZ.m"; sourceTree = "<group>"; };
 		E753AD7B24221AA500B5290B /* XZTeacher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XZTeacher.h; sourceTree = "<group>"; };
 		E753AD7C24221AA500B5290B /* XZTeacher.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XZTeacher.m; sourceTree = "<group>"; };
+		E778C7C32428B87F00C1CEA6 /* XZStudent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XZStudent.h; sourceTree = "<group>"; };
+		E778C7C42428B87F00C1CEA6 /* XZStudent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XZStudent.m; sourceTree = "<group>"; };
 		E794C9FF24162E8B000905CB /* isaAnalyze.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = isaAnalyze.h; sourceTree = "<group>"; };
 		E794CA0024162E8B000905CB /* isaAnalyze.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = isaAnalyze.m; sourceTree = "<group>"; };
 		E794CA1C241734E6000905CB /* MemoryAlignment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemoryAlignment.h; sourceTree = "<group>"; };
@@ -663,6 +666,8 @@
 				E71511EE2419DC630034F524 /* XZPerson.m */,
 				E753AD7B24221AA500B5290B /* XZTeacher.h */,
 				E753AD7C24221AA500B5290B /* XZTeacher.m */,
+				E778C7C32428B87F00C1CEA6 /* XZStudent.h */,
+				E778C7C42428B87F00C1CEA6 /* XZStudent.m */,
 				E753AD78242216CF00B5290B /* NSObject+XZ.h */,
 				E753AD79242216CF00B5290B /* NSObject+XZ.m */,
 				E753AD74242212E300B5290B /* objc_msgSend反汇编伪代码.h */,
@@ -1066,6 +1071,7 @@
 				E71511EF2419DC630034F524 /* XZPerson.m in Sources */,
 				E753AD7A242216CF00B5290B /* NSObject+XZ.m in Sources */,
 				E71511E42419DB500034F524 /* main.m in Sources */,
+				E778C7C52428B87F00C1CEA6 /* XZStudent.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
