@@ -479,6 +479,7 @@ objc_object::rootTryRetain()
 ALWAYS_INLINE id 
 objc_object::rootRetain(bool tryRetain, bool handleOverflow)
 {
+//    容错处理
     if (isTaggedPointer()) return (id)this;
 
     bool sideTableLocked = false;
@@ -487,25 +488,40 @@ objc_object::rootRetain(bool tryRetain, bool handleOverflow)
     isa_t oldisa;
     isa_t newisa;
 
+//    处理引用计数
+//    ISA 中有讲iretaincount 是存在ISA 中
     do {
         transcribeToSideTable = false;
         oldisa = LoadExclusive(&isa.bits);
         newisa = oldisa;
+//        散列表引用计数进行处理 这里对非nonpointer isa进行处理
         if (slowpath(!newisa.nonpointer)) {
             ClearExclusive(&isa.bits);
+/*
+ 散列表，散列表中是存储了多张表的，
+ 为了性能和安全所以会有锁，
+ 散列表内实际是哈希结构
+ */
             if (!tryRetain && sideTableLocked) sidetable_unlock();
             if (tryRetain) return sidetable_tryRetain() ? (id)this : nil;
             else return sidetable_retain();
         }
         // don't check newisa.fast_rr; we already called any RR overrides
+//        判断是否正在进行析构m，是的话就不处理了
         if (slowpath(tryRetain && newisa.deallocating)) {
             ClearExclusive(&isa.bits);
             if (!tryRetain && sideTableLocked) sidetable_unlock();
             return nil;
         }
         uintptr_t carry;
+/*
+ pointer isa 呢 处理extra_rc引用计数RC_ONE这个值模拟器和真机不一样
+ uintptr_t extra_rc          : 8   模拟器8位
+ uintptr_t extra_rc          : 7   真机7位
+ extra_rc  当表示该对象的引用计数值，实际上是引用计数值减 1， 例如，如果对象的引用计数为 10，那么 extra_rc 为 9。如果引用计数大于 10， 则需要使用到下面的 has_sidetable_rc。
+ */
         newisa.bits = addc(newisa.bits, RC_ONE, 0, &carry);  // extra_rc++
-
+//     如果超值了，就进行散列表中添加
         if (slowpath(carry)) {
             // newisa.extra_rc++ overflowed
             if (!handleOverflow) {
@@ -517,6 +533,7 @@ objc_object::rootRetain(bool tryRetain, bool handleOverflow)
             if (!tryRetain && !sideTableLocked) sidetable_lock();
             sideTableLocked = true;
             transcribeToSideTable = true;
+//            一半在散列表，一半在isa中的extra_rc
             newisa.extra_rc = RC_HALF;
             newisa.has_sidetable_rc = true;
         }
@@ -583,6 +600,7 @@ objc_object::rootRelease(bool performDealloc, bool handleUnderflow)
     do {
         oldisa = LoadExclusive(&isa.bits);
         newisa = oldisa;
+//nonpointer  -->散列表进行处理
         if (slowpath(!newisa.nonpointer)) {
             ClearExclusive(&isa.bits);
             if (sideTableLocked) sidetable_unlock();
@@ -590,7 +608,9 @@ objc_object::rootRelease(bool performDealloc, bool handleUnderflow)
         }
         // don't check newisa.fast_rr; we already called any RR overrides
         uintptr_t carry;
+//        进行减操作
         newisa.bits = subc(newisa.bits, RC_ONE, 0, &carry);  // extra_rc--
+//        如果isa 中的extra_rc减完了进行散列表操作
         if (slowpath(carry)) {
             // don't ClearExclusive()
             goto underflow;
@@ -606,7 +626,7 @@ objc_object::rootRelease(bool performDealloc, bool handleUnderflow)
 
     // abandon newisa to undo the decrement
     newisa = oldisa;
-
+//  对三列表进行操作
     if (slowpath(newisa.has_sidetable_rc)) {
         if (!handleUnderflow) {
             ClearExclusive(&isa.bits);
@@ -719,13 +739,16 @@ objc_object::rootAutorelease()
 inline uintptr_t 
 objc_object::rootRetainCount()
 {
+//    容错处理
     if (isTaggedPointer()) return (uintptr_t)this;
 
     sidetable_lock();
     isa_t bits = LoadExclusive(&isa.bits);
     ClearExclusive(&isa.bits);
     if (bits.nonpointer) {
+//bits.extra_rc;  isa中存储retainCount  bits.extra_rc就是0
         uintptr_t rc = 1 + bits.extra_rc;
+//        查看是否有散列表，有需要加上散列表中的值
         if (bits.has_sidetable_rc) {
             rc += sidetable_getExtraRC_nolock();
         }

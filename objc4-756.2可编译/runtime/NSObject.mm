@@ -1422,6 +1422,8 @@ objc_object::sidetable_retain()
     table.lock();
     size_t& refcntStorage = table.refcnts[this];
     if (! (refcntStorage & SIDE_TABLE_RC_PINNED)) {
+//        这里是要1左移2位  第一位是弱引用标示，第二位是析构标示
+//        #define SIDE_TABLE_RC_ONE            (1UL<<2)  // MSB-ward of deallocating bit
         refcntStorage += SIDE_TABLE_RC_ONE;
     }
     table.unlock();
